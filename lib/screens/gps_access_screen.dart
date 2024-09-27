@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:navegacion/blocs/blocks.dart';
+
 class GpsAccessScreen extends StatelessWidget {
   const GpsAccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: _AccessButton(),
+        child: BlocBuilder<GpsBloc, GpsState>(
+          builder: (context, state) {
+            return !state.isGpsEnabled
+            ? const _EnableGpsMessage()
+            : const _AccessButton();
+          })
+        //_AccessButton(),
       ),
     );
   }
@@ -30,7 +39,8 @@ class _AccessButton extends StatelessWidget {
         elevation: 0,
         splashColor: Colors.transparent,
         onPressed: (){
-        //TODO: por hacer
+          final gpsBloc = BlocProvider.of<GpsBloc>(context);
+          gpsBloc.askGpsAccess();
         })
       ],
     );
