@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:navegacion/blocs/blocks.dart';
+import 'package:navegacion/blocs/blocs.dart';
 import 'package:navegacion/screens/screens.dart';
 
 class LoadingScreen extends StatelessWidget {
