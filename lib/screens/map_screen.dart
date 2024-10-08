@@ -12,18 +12,15 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-
-
   late LocationBloc locationBloc;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
     final locationBloc = BlocProvider.of<LocationBloc>(context);
 
     locationBloc.startFollowingUser();
-
   }
 
   @override
@@ -32,32 +29,34 @@ class _MapScreenState extends State<MapScreen> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocBuilder<LocationBloc, LocationState>(
-        builder: (context, state){
-
-          if (state.lastKnowlocation == null) return const Center(child: Text('Espere por favor...'));
-
-          return SingleChildScrollView(
-            child: Stack(
-              children: [
-                MapView( initialLocation: state.lastKnowlocation!,)
-              ],
-            ),
+        builder: (context, locationState) {
+          if (locationState.lastKnowlocation == null){
+            return const Center(child: Text('Espere por favor...'));
+          }
+          return BlocBuilder<MapBloc, MapState>(
+            builder: (context, MapState) {
+              return SingleChildScrollView(
+                child: Stack(
+                  children: [
+                    MapView(
+                      initialLocation: locationState.lastKnowlocation!,
+                      polylines: MapState.polylines.values.toSet(),
+                    )
+                  ],
+                ),
+              );
+            },
           );
-
-        }),
-
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: const[
-            BtnCurrentLocation()
-          ],
-        ),
+      }),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: const [BtnCurrentLocation(), BtnFollowUser()],
+      ),
     );
   }
 }

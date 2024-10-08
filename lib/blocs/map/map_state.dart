@@ -3,24 +3,30 @@ part of 'map_bloc.dart';
 class MapState extends Equatable {
 
   final bool isMapInitialized;
-  final bool followUser;
+  final bool isfollowingUser;
+
+  //polylines
+  final Map<String, Polyline> polylines;
 
 
-  const MapState({
+  const MapState( {
+    Map<String, Polyline>? polylines,
     this.isMapInitialized = false, 
-    this.followUser = false
-  });
+    this.isfollowingUser = false
+  }): polylines = polylines ?? const {};
 
 
   MapState copyWith({
     bool? isMapInitialized,
-    bool? followUser,
+    bool? isfollowingUser,
+    Map<String, Polyline>? polylines
   }) => MapState(
     isMapInitialized: isMapInitialized ?? this.isMapInitialized,
-    followUser: followUser ?? this.followUser
+    isfollowingUser: isfollowingUser ?? this.isfollowingUser,
+    polylines: polylines ?? const {}
   );
 
   @override
-  List<Object> get props => [isMapInitialized, followUser];
+  List<Object> get props => [isMapInitialized, isfollowingUser, polylines];
 }
 

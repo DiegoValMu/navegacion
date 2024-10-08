@@ -8,6 +8,7 @@ class LocationState extends Equatable {
   //ultima geolocation
   //historia
   
+
   
   
   const LocationState({
