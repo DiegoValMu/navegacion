@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navegacion/blocs/blocs.dart';
+import 'package:navegacion/services/traffic_service.dart';
 import 'screens/screens.dart';
 
 void main() {
@@ -9,7 +10,7 @@ void main() {
       BlocProvider(create: (context) => GpsBloc() ),
       BlocProvider(create: (context) => LocationBloc() ), 
       BlocProvider(create: (context) => MapBloc( locationBloc: BlocProvider.of<LocationBloc>( context ) ) ),
-      BlocProvider(create: (context) => SearchBloc() )
+      BlocProvider(create: (context) => SearchBloc( trafficService: TrafficService()) )
       ], 
     child: const MapsApp()));
 }

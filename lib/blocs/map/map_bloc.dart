@@ -15,12 +15,13 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   final LocationBloc locationBloc;
   GoogleMapController? _mapController;
+  LatLng? mapCenter;
 
   StreamSubscription<LocationState>? locationStateSubscription;
 
   MapBloc({
     required this.locationBloc
-    }) : super(MapState()) {
+    }) : super(const MapState()) {
 
     on<OnMapInitializedEvent>( _onInitMap);
     on<OnStartFollowingUserEvent>( _onStartFollowingUser );
@@ -37,8 +38,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         add( UpdateUserPolylineEvent( locationState.myLocationHistory ) );
       }
 
-      if ( !state.isfollowingUser )return;
-      if ( locationState.lastKnowlocation == null)return;
+      if ( !state.isfollowingUser ) return;
+      if ( locationState.lastKnowlocation == null ) return;
       
       moveCamera( locationState.lastKnowlocation! );
 
@@ -69,11 +70,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   void _onPolylineNewPoint (UpdateUserPolylineEvent event, Emitter<MapState> emit){
     final myRoute = Polyline(
-      polylineId: PolylineId('value'),
+      polylineId: PolylineId('myRoute'),
       color: Colors.black,
       width: 5,
       startCap: Cap.roundCap,
       endCap: Cap.roundCap,
+      points: event.userLocations
       );
 
       final currentPolylines = Map<String, Polyline>.from( state.polylines );
