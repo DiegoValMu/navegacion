@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:navegacion/blocs/blocs.dart';
-import 'package:navegacion/services/traffic_service.dart';
+import 'package:navegacion/services/services.dart';
 import 'screens/screens.dart';
 
 void main() {

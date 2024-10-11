@@ -1,10 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
+import 'package:navegacion/helpers/helpers.dart';
 
 import '../blocs/blocs.dart';
-import '../models/models.dart';
+
 
 class ManualMarker extends StatelessWidget {
   const ManualMarker({super.key});
@@ -65,9 +65,15 @@ class _ManualMarkerBody extends StatelessWidget {
                     final end = mapBloc.mapCenter;
                     if( end == null ) return;
 
-                    await searchBloc.getCoorsStartToEnd(start, end);
+                    showLoadingMessage(context);
+
+                    final destination = await searchBloc.getCoorsStartToEnd(start, end);
+                    await mapBloc.drawRoutePolyline(destination);
                     
-                    //searchBloc.getCoorsStartToEnd(start, end);
+                    searchBloc.add( OnDesactivateManualMarkerEvent() );
+
+                    Navigator.pop(context);
+
                   },
                   child: const Text(
                     'Confirmar destino',
