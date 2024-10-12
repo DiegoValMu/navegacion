@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:navegacion/blocs/blocs.dart';
 import 'package:navegacion/delegates/delegates.dart';
 import 'package:navegacion/models/models.dart';
@@ -41,9 +42,11 @@ class _CustomSearchBarBody extends StatelessWidget {
       final start = locationBloc.state.lastKnowlocation;
       if( start == null ) return;
 
-      final end = result.position;
+      final position = result.position;
 
-      final destination = await searchBloc.getCoorsStartToEnd( start , end!);
+      final end = LatLng(position!.longitude, position.latitude);
+
+      final destination = await searchBloc.getCoorsStartToEnd( start , end);
       await mapBloc.drawRoutePolyline(destination);
     }
 

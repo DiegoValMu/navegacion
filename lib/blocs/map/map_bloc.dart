@@ -31,7 +31,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<UpdateUserPolylineEvent>( _onPolylineNewPoint);
 
     on<OnToggleUserRoute>((event, emit) => emit( state.copyWith( showMyRoute:  !state.showMyRoute )));
-    on<DisplayPolylinesEvent>((event, emit) => emit( state.copyWith( polylines: event.polylines )));
+    on<DisplayPolylinesEvent>((event, emit) => emit( state.copyWith( polylines: event.polylines, markers: event.markers )));
 
 
     locationBloc.stream.listen((locationState) { 
@@ -46,10 +46,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       moveCamera( locationState.lastKnowlocation! );
 
     });
-
-
-
-
   }
 
   void _onInitMap( OnMapInitializedEvent event, Emitter<MapState> emit) {
@@ -72,7 +68,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   void _onPolylineNewPoint (UpdateUserPolylineEvent event, Emitter<MapState> emit){
     final myRoute = Polyline(
-      polylineId: PolylineId('myRoute'),
+      polylineId: const PolylineId('myRoute'),
       color: Colors.black,
       width: 5,
       startCap: Cap.roundCap,
@@ -97,14 +93,44 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       endCap: Cap.roundCap
       );
 
+      double kms = destination.distance / 1000;
+      kms = (kms * 10).roundToDouble() / 10;
+
+      double tripDuration = (destination.duration / 60).floorToDouble();
+
+
+      final startMarker = Marker(
+        markerId: const MarkerId('start'),
+        position: destination.points.first,
+        infoWindow: InfoWindow(
+          title: 'Inicio',
+          snippet: 'Tu ubicación'
+        )
+        );
+
+      final endMarker = Marker(
+        markerId: const MarkerId('end'),
+        position: destination.points.last,
+        infoWindow: InfoWindow(
+          title: destination.endPlace.properties.name,
+          snippet: '$tripDuration min, $kms km'
+        )
+        );  
+
       final currentPolylines = Map<String, Polyline>.from( state.polylines );
       currentPolylines['route'] = myRoute;
-      add( DisplayPolylinesEvent( currentPolylines ) );
+
+      final currentMarkers = Map<String, Marker>.from( state.markers );
+      currentMarkers['start'] = startMarker;
+      currentMarkers['end'] = endMarker;
+
+      add( DisplayPolylinesEvent( currentPolylines, currentMarkers ) );
+
+      await Future.delayed(const Duration( milliseconds: 300 ) );
+
+      _mapController?.showMarkerInfoWindow( const MarkerId( 'end' ) );
 
   }
-
-
-
 
   void moveCamera ( LatLng newLocation) {
     final cameraUpdate = CameraUpdate.newLatLng(newLocation);

@@ -69,6 +69,8 @@ class _ManualMarkerBody extends StatelessWidget {
 
                     final destination = await searchBloc.getCoorsStartToEnd(start, end);
                     await mapBloc.drawRoutePolyline(destination);
+
+                    
                     
                     searchBloc.add( OnDesactivateManualMarkerEvent() );
 

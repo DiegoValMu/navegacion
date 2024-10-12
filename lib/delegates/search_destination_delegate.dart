@@ -60,6 +60,10 @@ SearchDestinationDelegate():super(
                   name: place.properties.name,
                   description: place.properties.placeFormatted
                   );
+
+                //TODO: agregar place al history
+                //searchBloc.add( AddToHistoryEvent( place ) );
+
                 close(context, result);
               },
             );
@@ -73,6 +77,9 @@ SearchDestinationDelegate():super(
 //Opcion para señalar ubicacion manualmente
   @override
   Widget buildSuggestions(BuildContext context) {
+
+    final history = BlocProvider.of<SearchBloc>(context).state.history;
+
     return ListView(
       children: [
         ListTile(
@@ -83,7 +90,50 @@ SearchDestinationDelegate():super(
             close(context, result);
 
           },
-        )
+        ),
+
+        
+
+        history.isEmpty 
+          ? Container() 
+          : const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Divider(),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Recientes'),
+              ),
+            ],
+          ),
+            
+
+
+        ...history.map((place) => Column(
+          children: [
+            ListTile(
+                title: Text( place.properties.name, style: const TextStyle( fontSize: 20) ),
+                subtitle: Text( place.properties.placeFormatted),
+                leading: const Icon ( Icons.place_outlined, color: Colors.black),
+
+                onTap: () {
+                  final result = SearchResult(
+                    cancel: false, 
+                    manual: false,
+                    position: LatLng( place.properties.coordinates.longitude, place.properties.coordinates.latitude),
+                    name: place.properties.name,
+                    description: place.properties.placeFormatted
+                  );
+
+                  close(context, result);
+                },
+              ),
+              const Divider(),
+            ],
+          ),
+           
+        ),
+        
       ],
     );
   }

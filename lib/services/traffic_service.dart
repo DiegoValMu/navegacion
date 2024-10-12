@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
+import 'package:navegacion/blocs/blocs.dart';
 import 'package:navegacion/services/services.dart';
 
 import '../models/models.dart';
@@ -47,6 +49,21 @@ class TrafficService {
     final placesResponse = PlacesResponse.fromMap( resp.data );
 
     return placesResponse.features;
+  }
+
+  Future<Feature> getInformationByCoors( LatLng coors ) async {
+    final url = 'https://api.mapbox.com/search/geocode/v6/reverse?country=cl&language=es';
+
+    final resp = await _dioPlaces.get( url, queryParameters: {
+      'longitude': coors.longitude,
+      'latitude': coors.latitude,
+      'limit': 1,
+      'access_token': 'pk.eyJ1IjoiZGllZ28tdmFsZGVycmFtYS1tdSIsImEiOiJjbTIwdnh2eGwwMHNzMm9xNXF6a29kOXM1In0.Uo-wVrhKnVMGvNZX0D-KJQ'
+    } );
+
+    final placesResponse = PlacesResponse.fromMap(resp.data);
+
+    return placesResponse.features[0];
   }
 
 
