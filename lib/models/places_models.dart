@@ -92,8 +92,8 @@ class Properties {
     final String namePreferred;
     final Coordinates coordinates;
     final String placeFormatted;
-    final List<double> bbox;
     final Context context;
+    final List<double>? bbox;
 
     Properties({
         required this.mapboxId,
@@ -103,8 +103,8 @@ class Properties {
         required this.namePreferred,
         required this.coordinates,
         required this.placeFormatted,
-        required this.bbox,
         required this.context,
+        this.bbox,
     });
 
     factory Properties.fromJson(String str) => Properties.fromMap(json.decode(str));
@@ -119,8 +119,8 @@ class Properties {
         namePreferred: json["name_preferred"],
         coordinates: Coordinates.fromMap(json["coordinates"]),
         placeFormatted: json["place_formatted"],
-        bbox: List<double>.from(json["bbox"].map((x) => x?.toDouble())),
         context: Context.fromMap(json["context"]),
+        bbox: json["bbox"] == null ? [] : List<double>.from(json["bbox"]!.map((x) => x?.toDouble())),
     );
 
     Map<String, dynamic> toMap() => {
@@ -131,20 +131,26 @@ class Properties {
         "name_preferred": namePreferred,
         "coordinates": coordinates.toMap(),
         "place_formatted": placeFormatted,
-        "bbox": List<dynamic>.from(bbox.map((x) => x)),
         "context": context.toMap(),
+        "bbox": bbox == null ? [] : List<dynamic>.from(bbox!.map((x) => x)),
     };
 }
 
 class Context {
+    final Postcode? street;
+    final Postcode? postcode;
+    final Place? locality;
+    final Place place;
     final Region region;
     final Country country;
-    final Place place;
 
     Context({
+        this.street,
+        this.postcode,
+        this.locality,
+        required this.place,
         required this.region,
         required this.country,
-        required this.place,
     });
 
     factory Context.fromJson(String str) => Context.fromMap(json.decode(str));
@@ -152,15 +158,21 @@ class Context {
     String toJson() => json.encode(toMap());
 
     factory Context.fromMap(Map<String, dynamic> json) => Context(
+        street: json["street"] == null ? null : Postcode.fromMap(json["street"]),
+        postcode: json["postcode"] == null ? null : Postcode.fromMap(json["postcode"]),
+        locality: json["locality"] == null ? null : Place.fromMap(json["locality"]),
+        place: Place.fromMap(json["place"]),
         region: Region.fromMap(json["region"]),
         country: Country.fromMap(json["country"]),
-        place: Place.fromMap(json["place"]),
     );
 
     Map<String, dynamic> toMap() => {
+        "street": street?.toMap(),
+        "postcode": postcode?.toMap(),
+        "locality": locality?.toMap(),
+        "place": place.toMap(),
         "region": region.toMap(),
         "country": country.toMap(),
-        "place": place.toMap(),
     };
 }
 
@@ -225,7 +237,7 @@ class Translations {
 }
 
 class Es {
-    final String language;
+    final Language language;
     final String name;
 
     Es({
@@ -238,27 +250,35 @@ class Es {
     String toJson() => json.encode(toMap());
 
     factory Es.fromMap(Map<String, dynamic> json) => Es(
-        language: json["language"],
+        language: languageValues.map[json["language"]]!,
         name: json["name"],
     );
 
     Map<String, dynamic> toMap() => {
-        "language": language,
+        "language": languageValues.reverse[language],
         "name": name,
     };
 }
+
+enum Language {
+    ES
+}
+
+final languageValues = EnumValues({
+    "es": Language.ES
+});
 
 class Place {
     final String mapboxId;
     final String name;
     final Translations translations;
-    final String wikidataId;
+    final String? wikidataId;
 
     Place({
         required this.mapboxId,
         required this.name,
         required this.translations,
-        required this.wikidataId,
+        this.wikidataId,
     });
 
     factory Place.fromJson(String str) => Place.fromMap(json.decode(str));
@@ -277,6 +297,30 @@ class Place {
         "name": name,
         "translations": translations.toMap(),
         "wikidata_id": wikidataId,
+    };
+}
+
+class Postcode {
+    final String mapboxId;
+    final String name;
+
+    Postcode({
+        required this.mapboxId,
+        required this.name,
+    });
+
+    factory Postcode.fromJson(String str) => Postcode.fromMap(json.decode(str));
+
+    String toJson() => json.encode(toMap());
+
+    factory Postcode.fromMap(Map<String, dynamic> json) => Postcode(
+        mapboxId: json["mapbox_id"],
+        name: json["name"],
+    );
+
+    Map<String, dynamic> toMap() => {
+        "mapbox_id": mapboxId,
+        "name": name,
     };
 }
 
@@ -342,4 +386,16 @@ class Coordinates {
         "longitude": longitude,
         "latitude": latitude,
     };
+}
+
+class EnumValues<T> {
+    Map<String, T> map;
+    late Map<T, String> reverseMap;
+
+    EnumValues(this.map);
+
+    Map<T, String> get reverse {
+            reverseMap = map.map((k, v) => MapEntry(v, k));
+            return reverseMap;
+    }
 }

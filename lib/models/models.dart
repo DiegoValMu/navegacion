@@ -1,3 +1,5 @@
+export 'package:navegacion/models/places_models.dart';
+
 export 'package:navegacion/models/route_destination.dart';
 
 export 'package:navegacion/models/traffic_response.dart';

@@ -10,23 +10,19 @@ class TrafficService {
   final Dio _dioPlaces;
 
   final String _baseTrafficUrl = 'https://api.mapbox.com/directions/v5/mapbox';
-  final String _basePlacesUrl = 'https://api.mapbox.com/search/geocoding/v6/reverse';
-
 
   TrafficService()
     : _dioTraffic = Dio()..interceptors.add( TrafficInterceptor() ),
-      _dioPlaces = Dio()..interceptors.add( PLacesInterceptor() );
+      _dioPlaces = Dio();
 
 
   Future<TrafficResponse> getCoorsStartToEnd( LatLng start, LatLng end ) async {
 
-
     final coorsString = '${ start.longitude },${ start.latitude };${ end.longitude },${ end.latitude }';
+    
     final url = '$_baseTrafficUrl/driving/$coorsString';
 
     final resp = await _dioTraffic.get(url);
-
-    print(resp);
 
     final data = TrafficResponse.fromMap(resp.data);
     
@@ -34,19 +30,23 @@ class TrafficService {
 
   }
 
-  Future getResultsByQuery( LatLng proximity, String query ) async {
+  Future<List<Feature>> getResultsByQuery( LatLng proximity, String query ) async {
 
     if( query.isEmpty ) return [];
 
-    final url = '$_basePlacesUrl/forward';
+    final url = 'https://api.mapbox.com/search/geocode/v6/forward?country=cl&language=es';
 
-    final resp = await _dioPlaces.get(url, queryParameters: {
+    //final url = '$_basePlacesUrl?q=$query&proximity=${ proximity.longitude},${ proximity.latitude }';
+
+    final resp = await _dioPlaces.get( url, queryParameters: {
       'q': query,
-      'proximity': '${ proximity.longitude },${ proximity.latitude}'
-    });
+      'proximity': '${ proximity.longitude},${ proximity.latitude }',
+      'access_token': 'pk.eyJ1IjoiZGllZ28tdmFsZGVycmFtYS1tdSIsImEiOiJjbTIwdnh2eGwwMHNzMm9xNXF6a29kOXM1In0.Uo-wVrhKnVMGvNZX0D-KJQ'
+    } );
 
+    final placesResponse = PlacesResponse.fromMap( resp.data );
 
-    return [];
+    return placesResponse.features;
   }
 
 
