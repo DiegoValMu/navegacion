@@ -1,5 +1,7 @@
 
 
+export 'package:navegacion/widgets/btn_cancel_route.dart';
+
 export 'package:navegacion/widgets/manual_marker.dart';
 
 export 'package:navegacion/widgets/custom_searchbar.dart';

@@ -41,22 +41,23 @@ SearchDestinationDelegate():super(
 
     searchBloc.getPlacesByQuery( proximity, query );
 
-
     return BlocBuilder<SearchBloc, SearchState>(
-      builder: (context, state) {
+      builder: (context, state){
         final places = state.places;
         return ListView.separated(
-          itemBuilder: (context, i) {
+          itemBuilder: (context, i){
             final place = places[i];
+            final destino = LatLng( place.properties.coordinates.longitude, place.properties.coordinates.latitude);
             return ListTile(
               title: Text( place.properties.name, style: const TextStyle( fontSize: 20) ),
               subtitle: Text( place.properties.placeFormatted),
               leading: const Icon ( Icons.place_outlined, color: Colors.black),
+              //trailing: Text( '${place.properties.distancia}km' ),
               onTap: (){
                 final result = SearchResult(
                   cancel: false, 
                   manual: false,
-                  position: LatLng( place.properties.coordinates.longitude, place.properties.coordinates.latitude),
+                  position: destino,
                   name: place.properties.name,
                   description: place.properties.placeFormatted
                   );
@@ -92,8 +93,6 @@ SearchDestinationDelegate():super(
           },
         ),
 
-        
-
         history.isEmpty 
           ? Container() 
           : const Column(
@@ -107,15 +106,13 @@ SearchDestinationDelegate():super(
             ],
           ),
             
-
-
         ...history.map((place) => Column(
           children: [
             ListTile(
                 title: Text( place.properties.name, style: const TextStyle( fontSize: 20) ),
                 subtitle: Text( place.properties.placeFormatted),
                 leading: const Icon ( Icons.place_outlined, color: Colors.black),
-
+                //trailing: Text( '${place.properties.distancia}km' ),
                 onTap: () {
                   final result = SearchResult(
                     cancel: false, 

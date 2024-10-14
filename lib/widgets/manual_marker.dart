@@ -50,6 +50,7 @@ class _ManualMarkerBody extends StatelessWidget {
           Positioned(
               bottom: 70,
               left: 40,
+              right: 40,
               child: FadeInUp(
                 child: MaterialButton(
                   minWidth: size.width - 120,
@@ -70,8 +71,6 @@ class _ManualMarkerBody extends StatelessWidget {
                     final destination = await searchBloc.getCoorsStartToEnd(start, end);
                     await mapBloc.drawRoutePolyline(destination);
 
-                    
-                    
                     searchBloc.add( OnDesactivateManualMarkerEvent() );
 
                     Navigator.pop(context);

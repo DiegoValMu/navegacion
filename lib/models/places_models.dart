@@ -58,6 +58,18 @@ class Feature {
         "geometry": geometry.toMap(),
         "properties": properties.toMap(),
     };
+
+    // Sobrescribir el operador == para comparar dos objetos Feature
+    @override
+    bool operator ==(Object other) {
+        if (identical(this, other)) return true;
+        return other is Feature && other.id == id && other.type == type;
+    }
+
+    // Sobrescribir hashCode para que funcione con == 
+    @override
+    int get hashCode => id.hashCode ^ type.hashCode;
+
 }
 
 class Geometry {
@@ -94,6 +106,8 @@ class Properties {
     final String placeFormatted;
     final Context context;
     final List<double>? bbox;
+    double? distancia;  // Nueva propiedad para la distancia
+    double? duracion; 
 
     Properties({
         required this.mapboxId,
@@ -105,6 +119,8 @@ class Properties {
         required this.placeFormatted,
         required this.context,
         this.bbox,
+        this.distancia,    // Inicialización de distancia
+        this.duracion,  
     });
 
     factory Properties.fromJson(String str) => Properties.fromMap(json.decode(str));
@@ -121,6 +137,8 @@ class Properties {
         placeFormatted: json["place_formatted"],
         context: Context.fromMap(json["context"]),
         bbox: json["bbox"] == null ? [] : List<double>.from(json["bbox"]!.map((x) => x?.toDouble())),
+        distancia: json["distancia"]?.toDouble(),  // Mapeo de la distancia
+        duracion: json["duracion"]?.toDouble(),  
     );
 
     Map<String, dynamic> toMap() => {
@@ -133,6 +151,8 @@ class Properties {
         "place_formatted": placeFormatted,
         "context": context.toMap(),
         "bbox": bbox == null ? [] : List<dynamic>.from(bbox!.map((x) => x)),
+        "distancia": distancia,   // Agregando distancia al mapa
+        "duracion": duracion,  
     };
 }
 

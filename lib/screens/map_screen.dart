@@ -56,7 +56,19 @@ class _MapScreenState extends State<MapScreen> {
                       markers: mapState.markers.values.toSet(),
                     ),
                     
-                    const CustomSearchBar(),
+                    // Botón de cancelar ruta en la esquina superior izquierda
+                    const Positioned(
+                      top: 50,
+                      left: 20, // Posición en la esquina superior izquierda
+                      child: BtnCancelRoute(),
+                    ),
+                    
+                    const Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: CustomSearchBar(),
+                    ),
                     
                     const ManualMarker()
                   ],
@@ -65,14 +77,17 @@ class _MapScreenState extends State<MapScreen> {
             },
           );
       }),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      
+      // Botones en la esquina superior derecha
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       floatingActionButton: const Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          SizedBox(height: 15), // Añadimos espacio para evitar superposición con BtnCancelRoute
           BtnCurrentLocation(), 
           BtnFollowUser(),
           BtnToggleUserRoute()
-          ],
+        ],
       ),
     );
   }
