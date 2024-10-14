@@ -62,6 +62,7 @@ SearchDestinationDelegate():super(
                   description: place.properties.placeFormatted
                   );
 
+                 
                 //TODO: agregar place al history
                 //searchBloc.add( AddToHistoryEvent( place ) );
 

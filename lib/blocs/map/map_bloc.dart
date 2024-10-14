@@ -31,9 +31,13 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<UpdateUserPolylineEvent>( _onPolylineNewPoint);
 
     on<OnToggleUserRoute>((event, emit) => emit( state.copyWith( showMyRoute:  !state.showMyRoute )));
+
+    on<OnCancelRoute>((event, emit) => emit( state.copyWith( inRoute:  false )));
+
     on<DisplayPolylinesEvent>((event, emit) => emit( state.copyWith( polylines: event.polylines, markers: event.markers )));
 
-
+    on<OnInitRoute>((event, emit) => emit( state.copyWith( inRoute:  true )));
+  
     locationBloc.stream.listen((locationState) { 
 
       if (locationState.lastKnowlocation != null) {
@@ -98,11 +102,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
       double tripDuration = (destination.duration / 60).floorToDouble();
 
-
       final startMarker = Marker(
         markerId: const MarkerId('start'),
         position: destination.points.first,
-        infoWindow: InfoWindow(
+        infoWindow: const InfoWindow(
           title: 'Inicio',
           snippet: 'Tu ubicación'
         )

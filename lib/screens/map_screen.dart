@@ -46,6 +46,9 @@ class _MapScreenState extends State<MapScreen> {
               if ( !mapState.showMyRoute ){
                 polylines.removeWhere((key, value) => key == 'myRoute');
               }
+              if ( !mapState.inRoute ){
+                polylines.removeWhere((key, value) => key == 'route');
+              }
 
               return SingleChildScrollView(
                 child: Stack(
@@ -57,7 +60,9 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     
                     // Botón de cancelar ruta en la esquina superior izquierda
-                    const Positioned(
+                    !mapState.inRoute
+                    ? Container()
+                    : const Positioned(
                       top: 50,
                       left: 20, // Posición en la esquina superior izquierda
                       child: BtnCancelRoute(),

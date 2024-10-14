@@ -72,7 +72,7 @@ class _ManualMarkerBody extends StatelessWidget {
                     await mapBloc.drawRoutePolyline(destination);
 
                     searchBloc.add( OnDesactivateManualMarkerEvent() );
-
+                    mapBloc.add( OnInitRoute() );
                     Navigator.pop(context);
 
                   },

@@ -18,9 +18,9 @@ class BtnCancelRoute extends StatelessWidget {
             return IconButton(
                 icon: Icon( Icons.clear),
                 onPressed: () {
-                  state.isfollowingUser
-                  ? mapBloc.add(OnStopFollowingUserEvent())
-                  : mapBloc.add(OnStartFollowingUserEvent());
+                  mapBloc.add( OnCancelRoute() );
+                  mapBloc.state.markers.remove('start');
+                  mapBloc.state.markers.remove('end');
                 });
           },
         ),

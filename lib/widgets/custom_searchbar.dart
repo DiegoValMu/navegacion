@@ -81,7 +81,7 @@ class _CustomSearchBarBody extends StatelessWidget {
       onHeightChanged(minHeight);
 
       await mapBloc.drawRoutePolyline(destination);
-
+      mapBloc.add( OnInitRoute() );
       
     }
   }
