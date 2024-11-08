@@ -44,7 +44,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
 
 class _CustomSearchBarBody extends StatelessWidget {
   const _CustomSearchBarBody({
-    super.key,
     required this.height,
     required this.minHeight,
     required this.maxHeight,

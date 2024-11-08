@@ -22,7 +22,7 @@ class ManualMarker extends StatelessWidget {
 }
 
 class _ManualMarkerBody extends StatelessWidget {
-  const _ManualMarkerBody({super.key});
+  const _ManualMarkerBody();
 
   @override
   Widget build(BuildContext context) {
@@ -90,9 +90,7 @@ class _ManualMarkerBody extends StatelessWidget {
 }
 
 class _BtnBack extends StatelessWidget {
-  const _BtnBack({
-    super.key,
-  });
+  const _BtnBack();
 
   void onCancelManualMarker(BuildContext context) {
     final searchBloc = BlocProvider.of<SearchBloc>(context);
